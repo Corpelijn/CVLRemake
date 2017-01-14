@@ -1,0 +1,37 @@
+
+# Set the initial parameters of the area
+name PlayerStart
+id 1001
+size 5x5
+special nofog
+
+
+# Fill the ground with grass
+fill ground grass
+
+
+# Set the positions of the trees
+obj tree 0 0
+obj tree 1 0
+obj tree 3 0
+obj tree 4 0
+
+obj tree 0 1
+obj tree 4 1
+
+obj tree 0 2
+obj tree 1 2
+obj tree 4 2
+
+obj tree 0 3
+obj tree 1 3
+obj tree 3 3
+obj tree 4 3
+
+obj tree 0 4
+obj tree 3 4
+obj tree 4 4
+
+
+# Set the player start position
+obj playerstart 2 1

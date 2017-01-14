@@ -1,0 +1,30 @@
+
+# Set the initial parameters of the area
+name StorageBuilding
+id 1002
+size 5x10
+
+
+# Fill the ground with grass
+fill ground grass
+
+
+# Set the trees in the area
+obj tree 1 1
+obj tree 0 2
+obj tree 4 2
+obj tree 0 9
+obj tree 4 9
+
+# Set the storage building
+obj storage 0 2
+
+# Set the walkable path
+obj stonepath 0 0
+obj stonepath 1 0
+obj stonepath 2 0
+obj stonepath 3 0
+obj stonepath 4 0
+
+obj stonepath 2 1
+obj stonepath 2 2
