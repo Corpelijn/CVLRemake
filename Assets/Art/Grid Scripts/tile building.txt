@@ -1,0 +1,41 @@
+
+#define(1000)  Castle tile
+{
+	// Set the size of the object
+	<size>8x8
+	
+	// Create the grass (tag 1) around the castle
+	<1>0x6
+	<1>0x7,2x1
+	
+	// Fill the rest with the castle (tag 0)
+	<fill>0
+}
+
+#define(1001)  Storage tile
+{
+	// Set the size of the object
+	<size>8x8
+	
+	// Create the storage building (tag 2)
+	<2>1x0,5x6
+	
+	// Create the path (tag 3) before the building
+	<3>3x6,1x2
+	
+	// Fill the rest with grass (tag 1)
+	<fill>1
+}
+
+#define (1002)  Troll tile
+{
+	// Set the size of the object
+	<size>8x8
+	
+	// Set the water (tag 4)
+	<4>0x0,2x8
+	<4>2x6,6x1
+	
+	// Fill the rest with grass (tag 1)
+	<fill>1
+}
