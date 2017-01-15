@@ -15,6 +15,8 @@ namespace Assets.Scripts.Grid
         private int height;
         private int startX;
         private int startY;
+        private Vector2? fixedSize;
+        private float scale;
         private bool normalized;
         private List<GridObject> gridObjects;
         private string name;
@@ -27,6 +29,25 @@ namespace Assets.Scripts.Grid
         public Grid(string name)
         {
             this.name = name;
+            scale = 1f;
+            normalized = false;
+            gridObjects = new List<GridObject>();
+        }
+
+        public Grid(string name, Vector2 fixedSize)
+        {
+            this.name = name;
+            this.fixedSize = fixedSize;
+            scale = 1f;
+            normalized = false;
+            gridObjects = new List<GridObject>();
+        }
+
+        public Grid(string name, float scale, Vector2 fixedSize)
+        {
+            this.name = name;
+            this.scale = scale;
+            this.fixedSize = fixedSize;
             normalized = false;
             gridObjects = new List<GridObject>();
         }
@@ -55,6 +76,11 @@ namespace Assets.Scripts.Grid
             }
         }
 
+        public Transform Parent
+        {
+            get { return parent; }
+        }
+
         #endregion
 
         #region "Methods"
@@ -66,15 +92,28 @@ namespace Assets.Scripts.Grid
 
         private void Normalize()
         {
-            int minx = gridObjects.Min(x => x.X);
-            int maxx = gridObjects.Max(x => x.X + x.Width);
-            int miny = gridObjects.Min(y => y.Y);
-            int maxy = gridObjects.Max(y => y.Y + y.Height);
+            // Check if we have a fixed size
+            if (fixedSize != null)
+            {
+                // Set the fixed size
+                width = (int)fixedSize.Value.x;
+                height = (int)fixedSize.Value.y;
+                startX = 0;
+                startY = 0;
+            }
+            else
+            {
+                // Calculate the size and start position
+                int minx = gridObjects.Min(x => x.X);
+                int maxx = gridObjects.Max(x => x.X + x.Width);
+                int miny = gridObjects.Min(y => y.Y);
+                int maxy = gridObjects.Max(y => y.Y + y.Height);
 
-            width = maxx - minx;
-            height = maxy - miny;
-            startX = minx;
-            startY = miny;
+                width = maxx - minx;
+                height = maxy - miny;
+                startX = minx;
+                startY = miny;
+            }
 
             normalized = true;
         }
@@ -95,6 +134,14 @@ namespace Assets.Scripts.Grid
                 gridObject.Draw(-startX + -width / 2f + x, startY + -height / 2f + y, this.parent);
                 gridObject.Update();
             }
+        }
+
+        public GameObject DrawScaled(Transform parent)
+        {
+            Draw(0, 0, parent);
+
+            this.parent.localScale = new Vector3(scale, 1f, scale);
+            return parent.gameObject;
         }
 
         public Dictionary<Direction, GridObject> GetSurrounding(GridObject obj)

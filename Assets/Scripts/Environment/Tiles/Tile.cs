@@ -22,7 +22,8 @@ namespace Assets.Scripts.Environment.Tiles
         private int width;
         private int height;
         private bool noFog;
-        private string groundType;
+        private string fillGround;
+        private List<TileGround> ground;
         private List<TileObject> objects;
         private Dictionary<Direction, Tile> neighbours;
 
@@ -34,6 +35,7 @@ namespace Assets.Scripts.Environment.Tiles
         {
             objects = new List<TileObject>();
             neighbours = new Dictionary<Direction, Tile>();
+            ground = new List<TileGround>();
 
             string[] lines = data.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             ParseFile(lines);
@@ -107,7 +109,13 @@ namespace Assets.Scripts.Environment.Tiles
                 else if (words[0] == "fill")
                 {
                     if (words[1] == "ground")
-                        groundType = words[2];
+                    {
+                        fillGround = words[2];
+                    }
+                }
+                else if (words[0] == "ground")
+                {
+                    ground.Add(new TileGround(Convert.ToInt32(words[2]), Convert.ToInt32(words[3]), words[1]));
                 }
                 else if (words[0] == "obj")
                 {
@@ -127,14 +135,20 @@ namespace Assets.Scripts.Environment.Tiles
             {
                 for (int j = 0; j < height; j++)
                 {
-                    groundGrid.AddObject(new Grass(groundGrid, i, j));
+                    TileGround ground = this.ground.FirstOrDefault(f => f.X == i && f.Y == j);
+                    if (ground == null)
+                        ground = new TileGround(i, j, fillGround);
+
+                    GridObject go = ground.GetGridObject(groundGrid);
+                    if (go != null)
+                        groundGrid.AddObject(go);
                 }
             }
 
             // Reset the random generator
             PRNG.ChangeSeed(0);
 
-            objectGrid = new Grid.Grid(name + "_objects (" + id + ")");
+            objectGrid = new Grid.Grid(name + "_objects (" + id + ")", new Vector2(width, height));
             foreach (TileObject obj in this.objects)
             {
                 GridObject go = obj.GetGridObject(objectGrid);

@@ -123,7 +123,17 @@ namespace Assets.Scripts.Environment
             ParseGridFile();
             GenerateGrid(zeroTile, 0, 0);
 
-            //grid = new Grid.Grid("demo-terrain");
+            //groundGrid = new Grid.Grid("demo-terrain");
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    for (int j = 0; j < 7; j++)
+            //    {
+            //        if (i == 1 && j == 1)
+            //            groundGrid.AddObject(new Water(groundGrid, i, j));
+            //        else
+            //            groundGrid.AddObject(new Grass(groundGrid, i, j));
+            //    }
+            //}
             //PRNG.ChangeSeed(0);
 
             //for (int i = 0; i < 5; i++)
