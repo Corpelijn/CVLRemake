@@ -23,8 +23,6 @@ namespace Assets.Scripts.Environment
         private List<Tile> tiles;
 
         public float DrawingDistance = 40f;
-        public TextAsset[] Tiles = null;
-        public TextAsset Grid = null;
 
         #endregion
 
@@ -42,9 +40,9 @@ namespace Assets.Scripts.Environment
 
         #region "Methods"
 
-        private void ParseGridFile()
+        private void ParseGridFile(string data)
         {
-            string[] lines = Grid.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = data.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string line in lines)
             {
@@ -100,6 +98,25 @@ namespace Assets.Scripts.Environment
             }
         }
 
+        private void ParseFolderForTiles(string folder)
+        {
+            // Find all the tile files in the folder
+            string[] files = System.IO.Directory.GetFiles(folder, "*.tile");
+            foreach (string file in files)
+            {
+                tiles.Add(new Tile(System.IO.File.ReadAllText(file)));
+            }
+
+            // Find a grid file in the folder
+            files = System.IO.Directory.GetFiles(folder, "*.grid");
+
+            // Parse the found files
+            foreach (string file in files)
+            {
+                ParseGridFile(System.IO.File.ReadAllText(file));
+            }
+        }
+
         #endregion
 
         #region "Abstract/Virtual Methods"
@@ -113,14 +130,10 @@ namespace Assets.Scripts.Environment
         public override void Start()
         {
             tiles = new List<Tile>();
-            foreach (TextAsset tile in Tiles)
-            {
-                tiles.Add(new Tile(tile));
-            }
+            ParseFolderForTiles(@"D:\Users\Bas\Afbeeldingen\cvl\tiles");
 
             groundGrid = new Grid.Grid("Ground");
             objectGrid = new Grid.Grid("Objects");
-            ParseGridFile();
             GenerateGrid(zeroTile, 0, 0);
 
             //groundGrid = new Grid.Grid("demo-terrain");

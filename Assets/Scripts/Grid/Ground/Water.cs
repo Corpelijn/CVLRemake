@@ -116,10 +116,10 @@ namespace Assets.Scripts.Grid.Ground
                 // Draw the shore tiles and set the parent
                 GameObject surroundingTiles = grid.DrawScaled(waterParent.transform);
                 surroundingTiles.transform.SetParent(waterParent.transform);
-
-                // Update the position of the parent object
-                waterParent.transform.position = new Vector3(x + X + Width / 2f, 0f, y + Y + Height / 2f);
             }
+
+            // Update the position of the parent object
+            waterParent.transform.position = new Vector3(x + X + Width / 2f, 0f, y + Y + Height / 2f);
         }
 
         public override void Destroy()

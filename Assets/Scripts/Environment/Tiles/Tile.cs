@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Grid;
 using Assets.Scripts.Grid.GridObjects;
 using Assets.Scripts.Grid.Ground;
+using Assets.Scripts.Grid.Other;
 using Assets.Scripts.Other;
 using System;
 using System.Collections.Generic;
@@ -31,13 +32,13 @@ namespace Assets.Scripts.Environment.Tiles
 
         #region "Constructors"
 
-        public Tile(TextAsset data)
+        public Tile(string data)
         {
             objects = new List<TileObject>();
             neighbours = new Dictionary<Direction, Tile>();
             ground = new List<TileGround>();
 
-            string[] lines = data.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = data.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             ParseFile(lines);
             GenerateGrid();
         }
@@ -144,6 +145,10 @@ namespace Assets.Scripts.Environment.Tiles
                         groundGrid.AddObject(go);
                 }
             }
+
+            // Add the fog to the ground
+            if (!noFog)
+                groundGrid.AddObject(new Fog(groundGrid, width, height));
 
             // Reset the random generator
             PRNG.ChangeSeed(0);
