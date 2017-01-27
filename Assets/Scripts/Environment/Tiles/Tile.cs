@@ -23,10 +23,15 @@ namespace Assets.Scripts.Environment.Tiles
         private int width;
         private int height;
         private bool noFog;
+        private bool available;
         private string fillGround;
         private List<TileGround> ground;
         private List<TileObject> objects;
         private Dictionary<Direction, Tile> neighbours;
+
+        private MultiBoolean drawingInfo;
+
+        private bool selected;
 
         #endregion
 
@@ -37,6 +42,8 @@ namespace Assets.Scripts.Environment.Tiles
             objects = new List<TileObject>();
             neighbours = new Dictionary<Direction, Tile>();
             ground = new List<TileGround>();
+            drawingInfo = new MultiBoolean();
+            InitDrawingInfo();
 
             string[] lines = data.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             ParseFile(lines);
@@ -67,6 +74,39 @@ namespace Assets.Scripts.Environment.Tiles
             get { return neighbours; }
         }
 
+        public bool Fog
+        {
+            get { return !noFog; }
+        }
+
+        public bool IsSelected
+        {
+            get { return selected; }
+            set { selected = value; }
+        }
+
+        public bool Available
+        {
+            get { return available; }
+            set { available = value; }
+        }
+
+        public int Width
+        {
+            get { return width; }
+        }
+
+        public int Height
+        {
+            get { return height; }
+        }
+
+        public MultiBoolean DrawingInfo
+        {
+            get { return drawingInfo; }
+            set { drawingInfo = value; }
+        }
+
         #endregion
 
         #region "Methods"
@@ -74,6 +114,12 @@ namespace Assets.Scripts.Environment.Tiles
         public void AddNeighbour(Direction direction, Tile tile)
         {
             neighbours.Add(direction, tile);
+        }
+
+        private void InitDrawingInfo()
+        {
+            drawingInfo["fog"] = false;
+            drawingInfo["selected"] = false;
         }
 
         private void ParseFile(string[] lines)
@@ -146,10 +192,6 @@ namespace Assets.Scripts.Environment.Tiles
                 }
             }
 
-            // Add the fog to the ground
-            if (!noFog)
-                groundGrid.AddObject(new Fog(groundGrid, width, height));
-
             // Reset the random generator
             PRNG.ChangeSeed(0);
 
@@ -162,6 +204,10 @@ namespace Assets.Scripts.Environment.Tiles
             }
 
             //grids.Add(grid);
+
+            // Add the TileInformation component
+            groundGrid.AddObject(new TileInformation(this, groundGrid, width, height));
+            objectGrid.AddObject(new TileInformation(this, objectGrid, width, height));
         }
 
         #endregion

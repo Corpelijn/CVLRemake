@@ -37,15 +37,7 @@ namespace Assets.Scripts.Grid.Ground
 
         #region "Methods"
 
-        private void SetRotation(Transform go)
-        {
-            Dictionary<Direction, GridObject> objs = this.parent.GetSurrounding(this);
 
-            GridObject[] surroundingWater = objs.Where(x => x.Value.GetType() == typeof(Water)).Select(s => s.Value).ToArray();
-
-            // TODO:
-            go.transform.eulerAngles = new Vector3(0, 90, 0);
-        }
 
         #endregion
 

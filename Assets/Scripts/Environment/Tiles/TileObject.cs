@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Grid.GridObjects;
+﻿using Assets.Scripts.Grid.Buildings;
+using Assets.Scripts.Grid.GridObjects;
 using Assets.Scripts.Grid.Ground;
 using Assets.Scripts.Grid.Objects;
 using Assets.Scripts.Grid.Other;
@@ -59,6 +60,14 @@ namespace Assets.Scripts.Environment.Tiles
             else if (type == TileObjectTypes.Dirtpath)
             {
                 return new DirtPath(grid, x, y);
+            }
+            else if (type == TileObjectTypes.Castle)
+            {
+                return new Castle(grid, x, y);
+            }
+            else if (type == TileObjectTypes.Vault)
+            {
+                return new Vault(grid, x, y);
             }
 
             return null;

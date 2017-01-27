@@ -13,6 +13,8 @@ namespace Assets.Scripts.Environment.Tiles
         public static readonly TileObjectTypes Playerstart = new TileObjectTypes("playerstart");
         public static readonly TileObjectTypes Stonepath = new TileObjectTypes("stonepath");
         public static readonly TileObjectTypes Dirtpath = new TileObjectTypes("dirtpath");
+        public static readonly TileObjectTypes Castle = new TileObjectTypes("castle");
+        public static readonly TileObjectTypes Vault = new TileObjectTypes("vault");
 
         private string value;
 

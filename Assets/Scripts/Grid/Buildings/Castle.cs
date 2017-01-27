@@ -1,9 +1,13 @@
 ﻿using Assets.Scripts.Grid.GridObjects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Grid.Other
+namespace Assets.Scripts.Grid.Buildings
 {
-    class Fog : GridObject
+    class Castle : GridObject
     {
         #region "Fields"
 
@@ -13,7 +17,7 @@ namespace Assets.Scripts.Grid.Other
 
         #region "Constructors"
 
-        public Fog(Grid grid, int width, int height) : base(grid, 0, 0, width, height)
+        public Castle(Grid grid, int x, int y) : base(grid, x, y, 7, 8)
         {
 
         }
@@ -42,11 +46,11 @@ namespace Assets.Scripts.Grid.Other
 
         protected override void DrawObjects(float x, float y, Transform parent)
         {
-            GameObject mist = ObjectPool.Instantiate("fog");
-            mist.transform.position = new Vector3(x + X + Width / 2f, 0, y + Y + Height / 2f);
-            ParticleSystem.ShapeModule shape = mist.GetComponent<ParticleSystem>().shape;
-            shape.box = new Vector3(Width - 1, Height - 1, 4);
-            mist.transform.SetParent(parent);
+            GameObject castle = ObjectPool.Instantiate("castle");
+            castle.transform.position = new Vector3(x + X, 0, y + Y);
+            castle.transform.SetParent(parent);
+            //castle.GetComponentInChildren<ClickInputObject>().SourceObject = this;
+            gameObjects.Add(castle);
 
             IsDrawn = true;
         }

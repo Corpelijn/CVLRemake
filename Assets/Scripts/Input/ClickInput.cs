@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Other;
+﻿using Assets.Scripts.Environment.Tiles;
+using Assets.Scripts.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Assets.Scripts.Input
         public bool click;
 
         private Transform lastHoverObject;
+        private GameObject go;
 
         #endregion
 
@@ -47,6 +49,8 @@ namespace Assets.Scripts.Input
 
         private void ReadMouseHover()
         {
+            TrackMousePosition();
+
             // Check if there is any item in the current level that can be hovered over
             if (!levelHasHoverableItems)
                 return;
@@ -71,12 +75,29 @@ namespace Assets.Scripts.Input
                             cio.OnMouseHoverLeave();
                     }
 
-                    hit.transform.GetComponentInParent<ClickInputObject>().OnMouseHoverEnter();
+                    ClickInputObject clickObj = hit.transform.GetComponentInParent<ClickInputObject>();
+                    if (clickObj != null)
+                        clickObj.OnMouseHoverEnter();
                     lastHoverObject = hit.transform;
                 }
                 else
-                    hit.transform.gameObject.GetComponentInParent<ClickInputObject>().OnMouseHover(hit.point);
+                {
+                    ClickInputObject cio1 = hit.transform.gameObject.GetComponentInParent<ClickInputObject>();
+                    if (cio1 != null)
+                        cio1.OnMouseHover(hit.point);
+                }
             }
+        }
+
+        private void TrackMousePosition()
+        {
+            if(go == null)
+            {
+                go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                go.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            }
+
+            go.transform.position = UnityEngine.Input.mousePosition;
         }
 
         private void ReadMouseClick()
@@ -93,10 +114,39 @@ namespace Assets.Scripts.Input
                     Ray vRay = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
                     if (Physics.Raycast(vRay, out hit))
                     {
-                        hit.transform.gameObject.GetComponentInChildren<ClickInputObject>().OnMouseClick(i, hit.point);
+                        // Get the Tile object
+                        Tile tile = GetTile(hit.transform);
+                        if (!tile.Fog)
+                        {
+                            ClickInputObject clickObj = hit.transform.gameObject.GetComponentInChildren<ClickInputObject>();
+                            if (clickObj != null)
+                                clickObj.OnMouseClick(i, hit.point);
+                        }
+                        else
+                        {
+                            tile.IsSelected = true;
+                        }
                     }
                 }
             }
+        }
+
+        private Tile GetTile(Transform transform)
+        {
+            Transform current = transform;
+            TileIdentifier identifier = null;
+            while ((identifier = current.GetComponent<TileIdentifier>()) == null)
+            {
+                current = current.parent;
+                if (current == null)
+                    break;
+            }
+
+            // Get the tile class
+            if (identifier != null)
+                return identifier.Tile;
+
+            return null;
         }
 
         #endregion
