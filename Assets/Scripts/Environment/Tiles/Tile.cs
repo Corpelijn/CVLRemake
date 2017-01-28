@@ -50,6 +50,18 @@ namespace Assets.Scripts.Environment.Tiles
             GenerateGrid();
         }
 
+        public Tile(BinaryStreamReader reader)
+        {
+            objects = new List<TileObject>();
+            neighbours = new Dictionary<Direction, Tile>();
+            ground = new List<TileGround>();
+            drawingInfo = new MultiBoolean();
+            InitDrawingInfo();
+
+            ParseData(ref reader);
+            GenerateGrid();
+        }
+
         #endregion
 
         #region "Properties"
