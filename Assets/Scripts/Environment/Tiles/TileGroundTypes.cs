@@ -75,6 +75,19 @@ namespace Assets.Scripts.Environment.Tiles
             return new TileGroundTypes(name);
         }
 
+        public static implicit operator TileGroundTypes(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    return Grass;
+                case 1:
+                    return Water;
+            }
+
+            return null;
+        }
+
         public static bool operator ==(TileGroundTypes right, TileGroundTypes left)
         {
             return right.value == left.value;

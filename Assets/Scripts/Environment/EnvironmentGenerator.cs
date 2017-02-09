@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Environment.Tiles;
+using Assets.Scripts.Game.Content;
 using Assets.Scripts.Grid;
 using Assets.Scripts.Grid.GridObjects;
 using Assets.Scripts.Grid.Ground;
@@ -40,32 +41,32 @@ namespace Assets.Scripts.Environment
 
         #region "Methods"
 
-        private void ParseGridFile(string data)
-        {
-            string[] lines = data.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        //private void ParseGridFile(string data)
+        //{
+        //    string[] lines = data.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string line in lines)
-            {
-                string[] words = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (line.StartsWith("#"))
-                { continue; }
-                else if (words[0] == "set")
-                {
-                    if (words[1] == "zero")
-                    {
-                        zeroTile = tiles.FirstOrDefault(x => x.Id == words[2]);
-                    }
-                    else
-                    {
-                        Tile tile = tiles.FirstOrDefault(x => x.Id == words[4]);
-                        Direction dir = words[2];
-                        Tile neighbour = tiles.FirstOrDefault(x => x.Id == words[1]);
+        //    foreach (string line in lines)
+        //    {
+        //        string[] words = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        //        if (line.StartsWith("#"))
+        //        { continue; }
+        //        else if (words[0] == "set")
+        //        {
+        //            if (words[1] == "zero")
+        //            {
+        //                zeroTile = tiles.FirstOrDefault(x => x.Id == words[2]);
+        //            }
+        //            else
+        //            {
+        //                Tile tile = tiles.FirstOrDefault(x => x.Id == words[4]);
+        //                Direction dir = words[2];
+        //                Tile neighbour = tiles.FirstOrDefault(x => x.Id == words[1]);
 
-                        tile.AddNeighbour(dir, neighbour);
-                    }
-                }
-            }
-        }
+        //                tile.AddNeighbour(dir, neighbour);
+        //            }
+        //        }
+        //    }
+        //}
 
         private void GenerateGrid(Tile currentTile, int x, int y)
         {
@@ -98,24 +99,24 @@ namespace Assets.Scripts.Environment
             }
         }
 
-        private void ParseFolderForTiles(string folder)
-        {
-            // Find all the tile files in the folder
-            string[] files = System.IO.Directory.GetFiles(folder, "*.tile");
-            foreach (string file in files)
-            {
-                tiles.Add(new Tile(System.IO.File.ReadAllText(file)));
-            }
+        //private void ParseFolderForTiles(string folder)
+        //{
+        //    // Find all the tile files in the folder
+        //    string[] files = System.IO.Directory.GetFiles(folder, "*.tile");
+        //    foreach (string file in files)
+        //    {
+        //        tiles.Add(new Tile(System.IO.File.ReadAllText(file)));
+        //    }
 
-            // Find a grid file in the folder
-            files = System.IO.Directory.GetFiles(folder, "*.grid");
+        //    // Find a grid file in the folder
+        //    files = System.IO.Directory.GetFiles(folder, "*.grid");
 
-            // Parse the found files
-            foreach (string file in files)
-            {
-                ParseGridFile(System.IO.File.ReadAllText(file));
-            }
-        }
+        //    // Parse the found files
+        //    foreach (string file in files)
+        //    {
+        //        ParseGridFile(System.IO.File.ReadAllText(file));
+        //    }
+        //}
 
         #endregion
 
@@ -130,11 +131,19 @@ namespace Assets.Scripts.Environment
         public override void Start()
         {
             tiles = new List<Tile>();
-            ParseFolderForTiles(@"D:\Users\Bas\Afbeeldingen\cvl\tiles");
+            //ParseFolderForTiles(@"D:\Users\Bas\Afbeeldingen\cvl\content\tiles");
 
             groundGrid = new Grid.Grid("Ground");
             objectGrid = new Grid.Grid("Objects");
-            GenerateGrid(zeroTile, 0, 0);
+
+            GameContentImport.INSTANCE.ZeroTile.Fog = false;
+            GenerateGrid(GameContentImport.INSTANCE.ZeroTile, 0, 0);
+
+            //Grid.Grid surroundingGrid = new Grid.Grid("Surrounding-Mist");
+
+            //surroundingGrid.AddObject(new Fog(surroundingGrid, 0 , -10, 30, 30));
+
+            //surroundingGrid.Draw(0, 0, transform);
 
             //groundGrid = new Grid.Grid("demo-terrain");
             //for (int i = 0; i < 7; i++)

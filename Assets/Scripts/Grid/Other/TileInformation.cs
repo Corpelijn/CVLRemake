@@ -54,11 +54,13 @@ namespace Assets.Scripts.Grid.Other
             if (Fog && !tile.DrawingInfo["fog"])
             {
                 GameObject mist = ObjectPool.Instantiate("fog");
-                mist.transform.position = new Vector3(currentX + Width / 2f, 0, currentY + Height / 2f);
+                mist.transform.position = new Vector3(currentX + Width / 2f, 1, currentY + Height / 2f);
                 ParticleSystem psystem = mist.GetComponent<ParticleSystem>();
                 ParticleSystem.ShapeModule shape = psystem.shape;
                 //psystem.startColor = new Color(0.1451f, 0.0196f, 0.1922f, 0.5961f);
-                shape.box = new Vector3(Width, Height, 6);
+                shape.box = new Vector3(Width, Height, 5);
+                ParticleSystem.EmissionModule emission = psystem.emission;
+                emission.rateOverTime = Width * Height * 2;
 
                 mist.transform.SetParent(parentTransform);
 

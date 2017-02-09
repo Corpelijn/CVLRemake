@@ -76,6 +76,26 @@ namespace Assets.Scripts.Grid
             }
         }
 
+        public int LowX
+        {
+            get
+            {
+                if (!normalized)
+                    Normalize();
+                return startX;
+            }
+        }
+
+        public int LowY
+        {
+            get
+            {
+                if (!normalized)
+                    Normalize();
+                return startY;
+            }
+        }
+
         public Transform Parent
         {
             get { return parent; }

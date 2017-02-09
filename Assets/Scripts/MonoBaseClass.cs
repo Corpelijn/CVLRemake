@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    abstract class MonoBaseClass<T> : MonoBehaviour where T : MonoBaseClass<T>
+    public abstract class MonoBaseClass<T> : MonoBehaviour where T : MonoBaseClass<T>
     {
         #region "Fields"
 
