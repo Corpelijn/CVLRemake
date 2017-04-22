@@ -44,6 +44,11 @@ namespace Assets.Scripts.Game.Content
             filesToRead.AddRange(Directory.GetFiles(directory, "*", SearchOption.AllDirectories));
         }
 
+        public void AddFiles(string[] files)
+        {
+            filesToRead.AddRange(files);
+        }
+
         private void ParseFile(string filename)
         {
             BinaryStreamReader reader = new BinaryStreamReader(filename);

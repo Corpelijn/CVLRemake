@@ -4,6 +4,7 @@ using Assets.Scripts.Grid.Other;
 using Assets.Scripts.Input;
 using Assets.Scripts.Input.Interfaces;
 using Assets.Scripts.Other;
+using CoBa;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace Assets.Scripts.Grid.Ground
             Dictionary<Direction, GridObject> grassBlocks = this.parent.GetSurrounding(this).Where(w => w.Value.GetType() != typeof(Water)).ToDictionary(a => a.Key, b => b.Value);
 
             // Draw a water block, there is always a bit of water
-            GameObject water = ObjectPool.GetNewObject("water");
+            GameObject water = ObjectPool.Instantiate("water");
             water.transform.position = new Vector3(0, 0, 0);
             water.GetComponentInChildren<ClickInputObject>().SourceObject = this;
             water.transform.SetParent(waterParent.transform);

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Environment;
 using Assets.Scripts.Grid.GridObjects;
+using CoBa;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace Assets.Scripts.Grid.Ground
 
         protected override void DrawObjects(float x, float y, Transform parent)
         {
-            GameObject go = ObjectPool.GetNewObject("grass");
+            GameObject go = ObjectPool.Instantiate("grass");
             go.transform.position = new Vector3(x + X + Width / 2f, 0, y + Y + Height / 2f);
             go.transform.SetParent(parent);
 
