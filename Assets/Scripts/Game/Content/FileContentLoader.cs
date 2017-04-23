@@ -14,7 +14,6 @@ namespace Assets.Scripts.Game.Content
     {
         #region "Fields"
 
-        private List<string> filesToRead;
         private List<Tile> tiles;
         private List<TileGrid> gridInformation;
 
@@ -24,7 +23,6 @@ namespace Assets.Scripts.Game.Content
 
         public FileContentLoader()
         {
-            filesToRead = new List<string>();
             tiles = new List<Tile>();
             gridInformation = new List<TileGrid>();
         }
@@ -33,23 +31,32 @@ namespace Assets.Scripts.Game.Content
 
         #region "Properties"
 
-        
+
 
         #endregion
 
         #region "Methods"
 
-        public void ParseDirectory(string directory)
+        private void StartParsingFile(object reader)
         {
-            filesToRead.AddRange(Directory.GetFiles(directory, "*", SearchOption.AllDirectories));
+            MKFile file = new MKFile(reader as BinaryStreamReader);
+            file.ParseFile();
+
+            tiles.AddRange(file.Tiles);
+            gridInformation.AddRange(file.GridInformation);
         }
 
-        public void AddFiles(string[] files)
-        {
-            filesToRead.AddRange(files);
-        }
+        #endregion
 
-        private void ParseFile(string filename)
+        #region "Abstract/Virtual Methods"
+
+
+
+        #endregion
+
+        #region "Inherited Methods"
+
+        public override void ParseFile(string filename)
         {
             BinaryStreamReader reader = new BinaryStreamReader(filename);
 
@@ -71,33 +78,8 @@ namespace Assets.Scripts.Game.Content
             reader.Close();
         }
 
-        private void StartParsingFile(object reader)
+        public override void StitchTogether()
         {
-            MKFile file = new MKFile(reader as BinaryStreamReader);
-            file.ParseFile();
-
-            tiles.AddRange(file.Tiles);
-            gridInformation.AddRange(file.GridInformation);
-        }
-
-        #endregion
-
-        #region "Abstract/Virtual Methods"
-
-
-
-        #endregion
-
-        #region "Inherited Methods"
-
-        public override void ParseContent()
-        {
-            // Parse all the found files
-            foreach (string file in filesToRead)
-            {
-                ParseFile(file);
-            }
-
             // Stitch some information together
             foreach (TileGrid gridInfo in gridInformation)
             {
@@ -116,7 +98,7 @@ namespace Assets.Scripts.Game.Content
                     source.AddNeighbour((Direction)connection[1], nextTile);
                 }
 
-                if(gridInfo.ZeroTile != -1)
+                if (gridInfo.ZeroTile != -1)
                 {
                     zeroTile = tiles.FirstOrDefault(x => x.Id == gridInfo.ZeroTile.ToString());
                 }

@@ -51,24 +51,24 @@ namespace Assets.Scripts.Game.Content
         {
             base.Awake();
 
-            if (ReadFromDirectory)
-            {
-                loader = new FileContentLoader();
+//            if (ReadFromDirectory)
+//            {
+//                loader = new FileContentLoader();
 
-#if UNITY_EDITOR
-                for (int i = 0; i < DebugDirectoryToRead.Length; i++)
-                {
-                    (loader as FileContentLoader).ParseDirectory(DebugDirectoryToRead[i]);
-                    loader.ParseContent();
-                }
-#else
-                for (int i = 0; i < DirectoryToRead.Length; i++)
-			    {
-                    (loader as FileContentLoader).ParseDirectory(DirectoryToRead[i]);
-                    loader.ParseContent();
-			    }
-#endif
-            }
+//#if UNITY_EDITOR
+//                for (int i = 0; i < DebugDirectoryToRead.Length; i++)
+//                {
+//                    (loader as FileContentLoader).ParseDirectory(DebugDirectoryToRead[i]);
+//                    loader.ParseContent();
+//                }
+//#else
+//                for (int i = 0; i < DirectoryToRead.Length; i++)
+//			    {
+//                    (loader as FileContentLoader).ParseDirectory(DirectoryToRead[i]);
+//                    loader.ParseContent();
+//			    }
+//#endif
+//            }
         }
 
         #endregion

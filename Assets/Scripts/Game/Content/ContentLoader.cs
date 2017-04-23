@@ -37,7 +37,9 @@ namespace Assets.Scripts.Game.Content
 
         #region "Abstract/Virtual Methods"
 
-        public abstract void ParseContent();
+        public abstract void ParseFile(string filename);
+
+        public abstract void StitchTogether();
 
         #endregion
 

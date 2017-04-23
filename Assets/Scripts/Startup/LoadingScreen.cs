@@ -1,11 +1,14 @@
-﻿using Assets.Scripts.Game.Content;
+﻿using Assets.Scripts.Environment;
+using Assets.Scripts.Game.Content;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Startup
@@ -17,12 +20,15 @@ namespace Assets.Scripts.Startup
         private delegate IEnumerator TodoAction();
 
         public Text Label = null;
-        public Scrollbar Progressbar = null;
+        public GameObject ProgressBarToDisable = null;
+        public RectTransform Progressbar = null;
 
         private Dictionary<string, TodoAction> actions;
         private KeyValuePair<string, TodoAction> currentAction;
 
         private List<string> files;
+        private float actionStepSize;
+        private float progress;
 
         #endregion
 
@@ -43,8 +49,12 @@ namespace Assets.Scripts.Startup
         private IEnumerator StartUp()
         {
             files = new List<string>();
+            progress = 0;
+            actionStepSize = 1f / actions.Count;
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitForEndOfFrame();
+
+            progress += actionStepSize;
 
             SetNextAction();
         }
@@ -63,9 +73,11 @@ namespace Assets.Scripts.Startup
                 files.AddRange(Directory.GetFiles(directory, "*", SearchOption.AllDirectories));
             }
 
+            float fileStep = actionStepSize / files.Count;
+
             foreach (string file in files)
             {
-                Debug.Log(file);
+                progress += fileStep;
                 yield return new WaitForEndOfFrame();
             }
 
@@ -74,25 +86,61 @@ namespace Assets.Scripts.Startup
 
         private IEnumerator ReadFiles()
         {
+            float fileStep = actionStepSize / files.Count;
             FileContentLoader loader = new FileContentLoader();
-            loader.AddFiles(files.ToArray());
-            loader.ParseContent();
 
-            yield return new WaitForSeconds(2);
+            foreach(string file in files)
+            {
+                loader.ParseFile(file);
+                progress += fileStep;
+
+                yield return new WaitForEndOfFrame();
+            }
+            loader.StitchTogether();
+            yield return new WaitForEndOfFrame();
+
+            EnvironmentGenerator.INSTANCE.ZeroTile = loader.ZeroTile;
+            EnvironmentGenerator.INSTANCE.enabled = true;
+
+            yield return new WaitForEndOfFrame();
 
             SetNextAction();
         }
 
         private IEnumerator LoadUserData()
         {
-            yield return new WaitForSeconds(2);
+            progress += actionStepSize;
+
+            yield return new WaitForEndOfFrame();
 
             SetNextAction();
         }
 
         private IEnumerator FadeOut()
         {
-            yield return new WaitForSeconds(2);
+            progress += actionStepSize / 2f;
+
+            yield return SceneManager.LoadSceneAsync("game", LoadSceneMode.Additive);
+
+            yield return new WaitForEndOfFrame();
+
+            Label.gameObject.SetActive(false);
+            ProgressBarToDisable.gameObject.SetActive(false);
+
+            progress += actionStepSize / 2f;
+
+            yield return new WaitForEndOfFrame();
+
+            SetNextAction();
+        }
+
+        private IEnumerator Unload()
+        {
+            progress += actionStepSize;
+
+            yield return SceneManager.UnloadSceneAsync("loadingScreen");
+
+            yield return new WaitForEndOfFrame();
         }
 
         private void ReadDescriptions()
@@ -104,7 +152,8 @@ namespace Assets.Scripts.Startup
                 actions.Add("Checking local files...", CheckFiles);
                 actions.Add("Loading local files...", ReadFiles);
                 actions.Add("Loading user progress...", LoadUserData);
-                actions.Add("Done!", FadeOut);
+                actions.Add("Finishing...", FadeOut);
+                actions.Add("Done!", Unload);
             }
             else
             {
@@ -143,7 +192,7 @@ namespace Assets.Scripts.Startup
 
         public override void Update()
         {
-
+            Progressbar.localScale = new Vector3(progress, 1, 1);
         }
 
         #endregion

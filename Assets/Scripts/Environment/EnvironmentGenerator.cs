@@ -35,7 +35,10 @@ namespace Assets.Scripts.Environment
 
         #region "Properties"
 
-
+        public Tile ZeroTile
+        {
+            set { zeroTile = value; }
+        }
 
         #endregion
 
@@ -136,8 +139,8 @@ namespace Assets.Scripts.Environment
             groundGrid = new Grid.Grid("Ground");
             objectGrid = new Grid.Grid("Objects");
 
-            GameContentImport.INSTANCE.ZeroTile.Fog = false;
-            GenerateGrid(GameContentImport.INSTANCE.ZeroTile, 0, 0);
+            zeroTile.Fog = false;
+            GenerateGrid(zeroTile, 0, 0);
 
             //Grid.Grid surroundingGrid = new Grid.Grid("Surrounding-Mist");
 

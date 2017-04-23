@@ -46,6 +46,8 @@ namespace Assets.Scripts.Game
         public override void Start()
         {
             resources = new List<Resource>();
+
+            DontDestroyOnLoad(this);
         }
 
         #endregion
