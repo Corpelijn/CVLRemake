@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Input.Interfaces
+namespace Assets.Scripts.Interfaces
 {
     interface IMouseClick : IClickableObject
     {

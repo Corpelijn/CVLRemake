@@ -1,12 +1,17 @@
-﻿using Assets.Scripts.Environment;
+﻿using Assets.Scripts.Data;
+using Assets.Scripts.Data.Database;
+using Assets.Scripts.Environment;
+using Assets.Scripts.Game;
 using Assets.Scripts.Game.Content;
+using Assets.Scripts.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using UnityEditor.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -20,15 +25,24 @@ namespace Assets.Scripts.Startup
         private delegate IEnumerator TodoAction();
 
         public Text Label = null;
-        public GameObject ProgressBarToDisable = null;
-        public RectTransform Progressbar = null;
+        public GameObject ProgressBar = null;
+        public Image background = null;
+        public Image text = null;
+
+        public GameObject EventSystem = null;
+        public GameObject ErrorDialog = null;
+        public Text ErrorText = null;
 
         private Dictionary<string, TodoAction> actions;
         private KeyValuePair<string, TodoAction> currentAction;
 
-        private List<string> files;
+        private List<LocalFile> files;
         private float actionStepSize;
         private float progress;
+
+        private float fadingStep = 0.75f;
+        private float currentFade = 0f;
+        private bool fading = false;
 
         #endregion
 
@@ -48,7 +62,7 @@ namespace Assets.Scripts.Startup
 
         private IEnumerator StartUp()
         {
-            files = new List<string>();
+            files = new List<LocalFile>();
             progress = 0;
             actionStepSize = 1f / actions.Count;
 
@@ -61,25 +75,74 @@ namespace Assets.Scripts.Startup
 
         private IEnumerator CheckFiles()
         {
-            string[] directories;
-            
-            if (Application.isEditor)
-                directories = GameContentImport.INSTANCE.DebugDirectoryToRead;
-            else
-                directories = GameContentImport.INSTANCE.DirectoryToRead;
-
-            foreach (string directory in directories)
+            DataTable results = null;
+            using (MySqlDatabaseConnection connection = MySqlDatabaseConnection.GetConnection())
             {
-                files.AddRange(Directory.GetFiles(directory, "*", SearchOption.AllDirectories));
-            }
-
-            float fileStep = actionStepSize / files.Count;
-
-            foreach (string file in files)
-            {
-                progress += fileStep;
+                try
+                {
+                    connection.Open();
+#if !UNITY_EDITOR
+                    results = connection.ExecuteQuery("select count(*) as count from game where version=?", StaticValues.VERSION_NUMBER);
+                    if (Convert.ToInt32(results.GetDataFromRow(0, "count")) == 0)
+                    {
+                        System.Diagnostics.Process.Start("updater.exe", "-current=" + StaticValues.VERSION_NUMBER + " -installdir=\"" + Path.GetFullPath(".") + "\"");
+                        Application.Quit();
+                    }
+#endif
+                    results = connection.ExecuteQuery("select filename, checksum from file");
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex);
+                    yield break;
+                }
                 yield return new WaitForEndOfFrame();
             }
+
+            foreach (DataRow row in results)
+            {
+                files.Add(new LocalFile(row["filename"].ToString(), row["checksum"].ToString()));
+                yield return new WaitForEndOfFrame();
+            }
+
+            try
+            {
+                ReadFilesFromDirectories();
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+                yield break;
+            }
+
+            progress += actionStepSize;
+
+            SetNextAction();
+        }
+
+        private IEnumerator UpdateFiles()
+        {
+            if (files.Count > 0)
+            {
+                foreach (LocalFile file in files)
+                {
+                    try
+                    {
+                        if (file.NetworkFile && file.NeedsUpdate)
+                        {
+                            file.GetFromDatabase();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowError(ex);
+                        yield break;
+                    }
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+
+            progress += actionStepSize;
 
             SetNextAction();
         }
@@ -89,14 +152,30 @@ namespace Assets.Scripts.Startup
             float fileStep = actionStepSize / files.Count;
             FileContentLoader loader = new FileContentLoader();
 
-            foreach(string file in files)
+            foreach (LocalFile file in files)
             {
-                loader.ParseFile(file);
-                progress += fileStep;
+                try
+                {
+                    loader.ParseFile(file.FullPath);
+                    progress += fileStep;
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex);
+                    yield break;
+                }
 
                 yield return new WaitForEndOfFrame();
             }
-            loader.StitchTogether();
+            try
+            {
+                loader.StitchTogether();
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+                yield break;
+            }
             yield return new WaitForEndOfFrame();
 
             EnvironmentGenerator.INSTANCE.ZeroTile = loader.ZeroTile;
@@ -124,8 +203,18 @@ namespace Assets.Scripts.Startup
 
             yield return new WaitForEndOfFrame();
 
-            Label.gameObject.SetActive(false);
-            ProgressBarToDisable.gameObject.SetActive(false);
+            for (int j = 0; j < Camera.allCamerasCount; j++)
+            {
+                Transform currentCameraTransform = Camera.allCameras[j].transform;
+                for (int i = 0; i < currentCameraTransform.childCount; i++)
+                {
+                    if (currentCameraTransform.GetChild(i).name == "ResourceMovementPoint")
+                    {
+                        ResourceDrawer.INSTANCE.ResourceMovementPoint = currentCameraTransform.GetChild(i);
+                        break;
+                    }
+                }
+            }
 
             progress += actionStepSize / 2f;
 
@@ -137,6 +226,13 @@ namespace Assets.Scripts.Startup
         private IEnumerator Unload()
         {
             progress += actionStepSize;
+
+            fading = true;
+
+            Label.gameObject.SetActive(false);
+            ProgressBar.SetActive(false);
+
+            yield return new WaitUntil(IsDoneFading);
 
             yield return SceneManager.UnloadSceneAsync("loadingScreen");
 
@@ -150,6 +246,7 @@ namespace Assets.Scripts.Startup
             {
                 actions.Add("Initializing...", StartUp);
                 actions.Add("Checking local files...", CheckFiles);
+                actions.Add("Updating files...", UpdateFiles);
                 actions.Add("Loading local files...", ReadFiles);
                 actions.Add("Loading user progress...", LoadUserData);
                 actions.Add("Finishing...", FadeOut);
@@ -161,6 +258,56 @@ namespace Assets.Scripts.Startup
             }
         }
 
+        private void ReadFilesFromDirectories()
+        {
+            string[] directories;
+
+            if (Application.isEditor)
+                directories = GameContentImport.INSTANCE.DebugDirectoryToRead;
+            else
+                directories = GameContentImport.INSTANCE.DirectoryToRead;
+
+            directories = directories.Select(x => Path.GetFullPath(x)).Concat(new string[] { System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + @"\MistKingdoms\" }).ToArray();
+
+            foreach (string directory in directories)
+            {
+                try
+                {
+                    string[] files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
+                    foreach (string file in files)
+                    {
+                        string relativePath = MakeRelative(file, directory);
+                        string checksum = Checksum.Calculate(file);
+                        LocalFile localFile = this.files.FirstOrDefault(x => x.Filename == relativePath);
+                        if (localFile != null && localFile.Checksum == checksum)
+                        {
+                            localFile.NeedsUpdate = false;
+                        }
+                        else if (localFile != null)
+                        {
+                            localFile.BaseDirectory = directory;
+                        }
+                        else
+                        {
+                            this.files.Add(new LocalFile(relativePath, directory, checksum));
+                        }
+                        //Debug.Log(relativePath + " -> " + checksum);
+                    }
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+        }
+
+        private string MakeRelative(string filePath, string referencePath)
+        {
+            Uri fileUri = new Uri(filePath);
+            Uri referenceUri = new Uri(referencePath);
+            return referenceUri.MakeRelativeUri(fileUri).ToString();
+        }
+
         private void SetNextAction()
         {
             if (currentAction.Key != null)
@@ -169,6 +316,36 @@ namespace Assets.Scripts.Startup
             currentAction = actions.First();
             Label.text = currentAction.Key;
             StartCoroutine(currentAction.Value.Invoke());
+        }
+
+        private bool IsDoneFading()
+        {
+            if (fading)
+            {
+                return currentFade >= 1f;
+            }
+            return false;
+        }
+
+        private void ShowError(Exception ex)
+        {
+            // Hide the progressbar
+            Label.gameObject.SetActive(false);
+            ProgressBar.SetActive(false);
+
+            // Show the error dialog and information
+            ErrorDialog.SetActive(true);
+            EventSystem.SetActive(true);
+            ErrorText.text = ex.ToString();
+        }
+
+        public void ExitOnError()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         #endregion
@@ -192,7 +369,14 @@ namespace Assets.Scripts.Startup
 
         public override void Update()
         {
-            Progressbar.localScale = new Vector3(progress, 1, 1);
+            if (fading)
+            {
+                background.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), currentFade);
+                text.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), currentFade);
+                currentFade += fadingStep * Time.deltaTime;
+            }
+
+            ProgressBar.GetComponent<Progressbar>().Value = progress;
         }
 
         #endregion

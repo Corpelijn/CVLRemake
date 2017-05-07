@@ -15,8 +15,7 @@ namespace Assets.Scripts.Grid.Other
         private float currentX;
         private float currentY;
 
-        private bool fogDrawn;
-        private bool selectedDrawn;
+        private GameObject[] selectedObjects;
 
         #endregion
 
@@ -66,45 +65,68 @@ namespace Assets.Scripts.Grid.Other
                 mist.transform.SetParent(parentTransform);
 
                 tile.DrawingInfo["fog"] = true;
+
+                tile.ObjectGrid.IgnoreRaycast(true);
+            }
+            else if (!Fog && tile.DrawingInfo["fog"])
+            {
+                tile.ObjectGrid.IgnoreRaycast(false);
             }
 
             if (IsSelected && !tile.DrawingInfo["selected"])
             {
-                GameObject edge = ObjectPool.Instantiate("edge");
-                edge.transform.position = new Vector3(currentX + Width / 2f, 0, currentY + Height / 2f - Height / 2f);
-                ParticleSystem psystem = edge.GetComponent<ParticleSystem>();
+                selectedObjects = new GameObject[5];
+                selectedObjects[0] = ObjectPool.Instantiate("edge");
+                selectedObjects[0].transform.position = new Vector3(currentX + Width / 2f, 0, currentY + Height / 2f - Height / 2f);
+                ParticleSystem psystem = selectedObjects[0].GetComponent<ParticleSystem>();
                 ParticleSystem.ShapeModule shape = psystem.shape;
                 shape.radius = tile.Width / 2f;
 
-                edge.transform.SetParent(parentTransform);
+                selectedObjects[0].transform.SetParent(parentTransform);
 
-                edge = ObjectPool.Instantiate("edge");
-                edge.transform.position = new Vector3(currentX + Width / 2f, 0, currentY + Height / 2f + Height / 2f);
-                psystem = edge.GetComponent<ParticleSystem>();
+                selectedObjects[1] = ObjectPool.Instantiate("edge");
+                selectedObjects[1].transform.position = new Vector3(currentX + Width / 2f, 0, currentY + Height / 2f + Height / 2f);
+                psystem = selectedObjects[1].GetComponent<ParticleSystem>();
                 shape = psystem.shape;
                 shape.radius = tile.Width / 2f;
 
-                edge.transform.SetParent(parentTransform);
+                selectedObjects[1].transform.SetParent(parentTransform);
 
-                edge = ObjectPool.Instantiate("edge");
-                edge.transform.position = new Vector3(currentX + Width / 2f + Width / 2f, 0, currentY + Height / 2f);
-                edge.transform.eulerAngles = new Vector3(0, 90, 0);
-                psystem = edge.GetComponent<ParticleSystem>();
+                selectedObjects[2] = ObjectPool.Instantiate("edge");
+                selectedObjects[2].transform.position = new Vector3(currentX + Width / 2f + Width / 2f, 0, currentY + Height / 2f);
+                selectedObjects[2].transform.eulerAngles = new Vector3(0, 90, 0);
+                psystem = selectedObjects[2].GetComponent<ParticleSystem>();
                 shape = psystem.shape;
                 shape.radius = tile.Height / 2f;
 
-                edge.transform.SetParent(parentTransform);
+                selectedObjects[2].transform.SetParent(parentTransform);
 
-                edge = ObjectPool.Instantiate("edge");
-                edge.transform.position = new Vector3(currentX + Width / 2f - Width / 2f, 0, currentY + Height / 2f);
-                edge.transform.eulerAngles = new Vector3(0, 90, 0);
-                psystem = edge.GetComponent<ParticleSystem>();
+                selectedObjects[3] = ObjectPool.Instantiate("edge");
+                selectedObjects[3].transform.position = new Vector3(currentX + Width / 2f - Width / 2f, 0, currentY + Height / 2f);
+                selectedObjects[3].transform.eulerAngles = new Vector3(0, 90, 0);
+                psystem = selectedObjects[3].GetComponent<ParticleSystem>();
                 shape = psystem.shape;
                 shape.radius = tile.Height / 2f;
 
-                edge.transform.SetParent(parentTransform);
+                selectedObjects[3].transform.SetParent(parentTransform);
+
+                selectedObjects[4] = ObjectPool.Instantiate("selectionFrame");
+                selectedObjects[4].transform.localScale = new Vector3(Width, 1, Height);
+                selectedObjects[4].transform.position = new Vector3(currentX + Width / 2f, 0, currentY + Height / 2f);
+                selectedObjects[4].transform.SetParent(parentTransform);
 
                 tile.DrawingInfo["selected"] = true;
+            }
+            else if (!IsSelected && tile.DrawingInfo["selected"])
+            {
+                foreach (GameObject obj in selectedObjects)
+                {
+                    ObjectPool.Destroy(obj);
+                }
+
+                tile.DrawingInfo["selected"] = false;
+
+                selectedObjects = null;
             }
         }
 

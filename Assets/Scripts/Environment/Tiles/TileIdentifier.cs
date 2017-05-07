@@ -59,7 +59,11 @@ namespace Assets.Scripts.Environment.Tiles
             if (tile != null)
             {
                 Fog = tile.Fog;
-                if (tile.IsSelected)
+                //if(tile.Fog)
+                //{
+                //    tile.ObjectGrid.IgnoreRaycast(true);
+                //}
+                if (tile.IsSelected != tile.DrawingInfo["selected"])
                 {
                     information.UpdateParticleSystems();
                 }

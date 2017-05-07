@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Input.Interfaces;
+﻿using Assets.Scripts.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,8 @@
 ﻿using Assets.Scripts.Game;
+using Assets.Scripts.Game.ObjectClasses;
 using Assets.Scripts.Grid.GridObjects;
 using Assets.Scripts.Input;
-using Assets.Scripts.Input.Interfaces;
+using Assets.Scripts.Interfaces;
 using Assets.Scripts.Other;
 using CoBa;
 using System;
@@ -12,7 +13,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Grid.Objects
 {
-    class Tree : GridObject, IMouseClick
+    class Tree : GridObject, IMouseClick, IMouseHoverEnter, IMouseHoverLeave
     {
         #region "Fields"
 
@@ -23,6 +24,8 @@ namespace Assets.Scripts.Grid.Objects
 
         private float interpolation;
         private Vector3 originalPosition;
+
+        private ResourceRequirement requirementObject;
 
         #endregion
 
@@ -106,6 +109,7 @@ namespace Assets.Scripts.Grid.Objects
 
             // Set the click parameter active
             ClickInput.INSTANCE.LevelHasClickableItems++;
+            ClickInput.INSTANCE.LevelHasHoverableItems++;
         }
 
         public override void Destroy()
@@ -116,12 +120,13 @@ namespace Assets.Scripts.Grid.Objects
             {
                 // Set the click parameter inactive
                 ClickInput.INSTANCE.LevelHasClickableItems--;
+                ClickInput.INSTANCE.LevelHasHoverableItems--;
             }
         }
 
         public void OnMouseClick(int button, Vector3 hitPoint)
         {
-            if (button == 0 && !treeIsFallingOver)
+            if (button == 0 && !treeIsFallingOver && Vault.INSTANCE.UseItem("axe"))
             {
                 treeIsCut = true;
                 treeIsFallingOver = true;
@@ -132,6 +137,19 @@ namespace Assets.Scripts.Grid.Objects
         public override void Update()
         {
             TreeFallover();
+        }
+
+        public void OnMouseHoverEnter()
+        {
+            Mesh mesh = treeGameObject.GetComponentInChildren<MeshFilter>().mesh;
+
+            requirementObject = new ResourceRequirement("axe");
+            requirementObject.Draw(null, new Vector3(treeGameObject.transform.position.x, mesh.bounds.size.y / 2f + 0.5f, treeGameObject.transform.position.z));
+        }
+
+        public void OnMouseHoverLeave()
+        {
+            requirementObject.Destroy();
         }
 
         #endregion

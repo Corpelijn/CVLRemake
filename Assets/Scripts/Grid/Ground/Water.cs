@@ -2,7 +2,7 @@
 using Assets.Scripts.Grid.GridObjects;
 using Assets.Scripts.Grid.Other;
 using Assets.Scripts.Input;
-using Assets.Scripts.Input.Interfaces;
+using Assets.Scripts.Interfaces;
 using Assets.Scripts.Other;
 using CoBa;
 using System;

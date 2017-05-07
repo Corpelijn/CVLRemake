@@ -74,6 +74,7 @@ namespace Assets.Scripts.Environment
         private void GenerateGrid(Tile currentTile, int x, int y)
         {
             // Add the current tile
+            tiles.Add(currentTile);
             groundGrid.AddObject(new SubGrid(groundGrid, currentTile.GroundGrid, x, y));
             objectGrid.AddObject(new SubGrid(objectGrid, currentTile.ObjectGrid, x, y));
 
@@ -139,8 +140,14 @@ namespace Assets.Scripts.Environment
             groundGrid = new Grid.Grid("Ground");
             objectGrid = new Grid.Grid("Objects");
 
-            zeroTile.Fog = false;
-            GenerateGrid(zeroTile, 0, 0);
+            if (zeroTile != null)
+            {
+                zeroTile.Fog = false;
+                GenerateGrid(zeroTile, 0, 0);
+
+                Tile focusTile = tiles.FirstOrDefault(x => x.Id == "1001");
+                CameraMovement.INSTANCE.FocusCamera(focusTile);
+            }
 
             //Grid.Grid surroundingGrid = new Grid.Grid("Surrounding-Mist");
 
@@ -183,8 +190,11 @@ namespace Assets.Scripts.Environment
 
         public override void Update()
         {
-            groundGrid.Draw(0, 0, transform);
-            objectGrid.Draw(0, 0, transform);
+            if (zeroTile != null)
+            {
+                groundGrid.Draw(0, 0, transform);
+                objectGrid.Draw(0, 0, transform);
+            }
         }
 
         #endregion

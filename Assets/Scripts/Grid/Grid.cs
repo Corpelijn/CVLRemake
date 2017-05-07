@@ -101,9 +101,32 @@ namespace Assets.Scripts.Grid
             get { return parent; }
         }
 
+        public Vector2 CenterPosition
+        {
+            get { return new Vector2(); }
+        }
+
         #endregion
 
         #region "Methods"
+
+        public void IgnoreRaycast(bool value)
+        {
+            if (parent != null)
+            {
+                SetLayerMask(value ? 2 : 0, parent);
+            }
+        }
+
+        private void SetLayerMask(int layer, Transform obj)
+        {
+            for (int i = 0; i < obj.childCount; i++)
+            {
+                Transform child = obj.GetChild(i);
+                child.gameObject.layer = layer;
+                SetLayerMask(layer, child);
+            }
+        }
 
         public void AddObject(GridObject obj)
         {

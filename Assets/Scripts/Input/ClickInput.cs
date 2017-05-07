@@ -91,18 +91,18 @@ namespace Assets.Scripts.Input
 
         private void TrackMousePosition()
         {
-            if(go == null)
-            {
-                go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                go.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            }
+            //if (go == null)
+            //{
+            //    go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //    go.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            //}
 
-            go.transform.position = UnityEngine.Input.mousePosition;
+            //go.transform.position = UnityEngine.Input.mousePosition;
         }
 
         private void ReadMouseClick()
         {
-            if (!levelHasClickableItems)
+            if (!levelHasClickableItems || ScreenMovement.INSTANCE.IsMoving)
                 return;
 
             for (int i = 0; i < 3; i++)
@@ -112,10 +112,15 @@ namespace Assets.Scripts.Input
                     // Raycast the item under the mouse
                     RaycastHit hit = new RaycastHit();
                     Ray vRay = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+                    CurrentSelection.INSTANCE.SelectTile(null);
                     if (Physics.Raycast(vRay, out hit))
                     {
                         // Get the Tile object
                         Tile tile = GetTile(hit.transform);
+                        if (tile == null)
+                        {
+                            continue;
+                        }
                         if (!tile.Fog)
                         {
                             ClickInputObject clickObj = hit.transform.gameObject.GetComponentInChildren<ClickInputObject>();
@@ -124,7 +129,7 @@ namespace Assets.Scripts.Input
                         }
                         else
                         {
-                            tile.IsSelected = true;
+                            CurrentSelection.INSTANCE.SelectTile(tile);
                         }
                     }
                 }

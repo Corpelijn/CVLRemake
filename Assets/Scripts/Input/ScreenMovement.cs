@@ -16,6 +16,8 @@ namespace Assets.Scripts.Input
         public float ZoomSpeed = 10f;
         public float MovementSpeed = 1f;
 
+        public bool isMoving;
+
         #endregion
 
         #region "Constructors"
@@ -26,7 +28,10 @@ namespace Assets.Scripts.Input
 
         #region "Properties"
 
-
+        public bool IsMoving
+        {
+            get { return isMoving; }
+        }
 
         #endregion
 
@@ -42,6 +47,8 @@ namespace Assets.Scripts.Input
             Vector2 currentMousePosition = UnityEngine.Input.mousePosition;
 
             Vector2 delta = currentMousePosition - lastMousePosition;
+            if (Mathf.Abs(delta.x) > 3 || Mathf.Abs(delta.y) > 3)
+                isMoving = true;
             Transform camTransform = Camera.main.transform;
 
             Vector3 forward = new Vector3(camTransform.forward.x, 0, camTransform.forward.z);
@@ -60,6 +67,10 @@ namespace Assets.Scripts.Input
             else if (initialPositionSet && UnityEngine.Input.GetMouseButtonUp(0))
             {
                 initialPositionSet = false;
+            }
+            else if (isMoving && !initialPositionSet)
+            {
+                isMoving = false;
             }
         }
 

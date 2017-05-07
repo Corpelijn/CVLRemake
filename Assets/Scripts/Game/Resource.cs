@@ -1,5 +1,5 @@
 ﻿using Assets.Scripts.Input;
-using Assets.Scripts.Input.Interfaces;
+using Assets.Scripts.Interfaces;
 using Assets.Scripts.Other;
 using CoBa;
 using System;
