@@ -1,0 +1,9 @@
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\bin\Debug\MistKingdomsFileBaker.exe.config
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\bin\Debug\MistKingdomsFileBaker.exe
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\bin\Debug\MistKingdomsFileBaker.pdb
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\obj\Debug\MistKingdomsFileBaker.csprojResolveAssemblyReference.cache
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\obj\Debug\MistKingdomsFileBaker.Form1.resources
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\obj\Debug\MistKingdomsFileBaker.Properties.Resources.resources
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\obj\Debug\MistKingdomsFileBaker.csproj.GenerateResource.Cache
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\obj\Debug\MistKingdomsFileBaker.exe
+D:\Developments\CoBa\MistKingdomsFileBaker\MistKingdomsFileBaker\obj\Debug\MistKingdomsFileBaker.pdb
