@@ -1,0 +1,46 @@
+Mono path[0] = 'D:/Developments/CoBa/MistKingdomsUpdater/MistKingdomsUpdater/bin/Debug/mk_Data/Managed'
+Mono path[1] = 'D:/Developments/CoBa/MistKingdomsUpdater/MistKingdomsUpdater/bin/Debug/mk_Data/Mono'
+Mono config path = 'D:/Developments/CoBa/MistKingdomsUpdater/MistKingdomsUpdater/bin/Debug/mk_Data/Mono/etc'
+PlayerConnection initialized from D:/Developments/CoBa/MistKingdomsUpdater/MistKingdomsUpdater/bin/Debug/mk_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55472
+Multi-casting "[IP] 192.168.94.2 [Port] 55472 [Flags] 3 [Guid] 3759822900 [EditorId] 1775743033 [Version] 1048832 [Id] WindowsPlayer(Bas-MSI) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [0.0.0.0:55472]...
+PlayerConnection accepted from [172.16.10.187] handle:0x2c0
+Started listening to [0.0.0.0:55472]
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56900
+PlayerConnection already initialized - listening to [0.0.0.0:55472]
+Player data archive not found at `D:/Developments/CoBa/MistKingdomsUpdater/MistKingdomsUpdater/bin/Debug/mk_Data/data.unity3d`, using local filesystemInitialize engine version: 5.6.0f3 (497a0f351392)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics 4600 (ID=0x416)
+    Vendor:   Intel
+    VRAM:     1024 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\I18N.dll (this message is harmless)
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\I18N.West.dll (this message is harmless)
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\CoBa.ObjectPool.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\CoBa.ObjectPool.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\I18N.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\I18N.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\I18N.West.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\I18N.West.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\MySql.Data.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\MySql.Data.dll into Unity Child Domain
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\System.Data.dll (this message is harmless)
+Loading D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\System.Data.dll into Unity Child Domain
+- Completed reload, in  0.064 seconds
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\mk_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+Waiting for finish

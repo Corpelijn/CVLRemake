@@ -1,0 +1,9 @@
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Release\updater.exe.config
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Release\updater.exe
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Release\updater.pdb
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Release\MySql.Data.dll
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Release\MistKingdomsUpdater.Form1.resources
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Release\updater.Properties.Resources.resources
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Release\MistKingdomsUpdater.csproj.GenerateResource.Cache
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Release\updater.exe
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Release\updater.pdb

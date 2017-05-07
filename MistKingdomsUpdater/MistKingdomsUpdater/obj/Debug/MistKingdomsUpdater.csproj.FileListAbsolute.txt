@@ -1,0 +1,10 @@
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Debug\MistKingdomsUpdater.Form1.resources
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Debug\MistKingdomsUpdater.csproj.GenerateResource.Cache
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\MySql.Data.dll
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\updater.exe.config
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\updater.exe
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\bin\Debug\updater.pdb
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Debug\updater.Properties.Resources.resources
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Debug\updater.exe
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Debug\updater.pdb
+D:\Developments\CoBa\MistKingdomsUpdater\MistKingdomsUpdater\obj\Debug\MistKingdomsUpdater.csprojResolveAssemblyReference.cache
